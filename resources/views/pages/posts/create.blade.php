@@ -6,7 +6,7 @@
 
 @section('content')
     <main class="rounded-tl-lg bg-gray-50">
-        <div class="p-4 space-y-3">
+        <div class="py-4 px-8 space-y-3">
             <div class="flex flex-auto justify-between">
                 <div>
                     <h1 class="text-xl font-medium">Hi Jolas</h1>
