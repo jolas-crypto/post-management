@@ -1,9 +1,11 @@
 <template>
     <main class="rounded-tl-lg bg-gray-50">
         <div class="p-4 space-y-3">
-            <div class="flex flex-auto justify-between">
+            <div class="flex flex-auto justify-between px-4">
                 <div>
-                    <h1 class="text-xl font-medium">Hi Jolas</h1>
+                    <h1 class="text-xl font-medium">
+                        <span>Hi Jolas</span>
+                    </h1>
                     <h1 class="text-sm font-light">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio, minima!</h1>
                 </div>
             </div>
