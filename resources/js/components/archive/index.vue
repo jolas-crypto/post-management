@@ -1,5 +1,6 @@
 <template>
     <main class="rounded-tl-lg bg-white">
+        <!-- to do: can make into component -->
         <div class="container mx-auto px-2 flex">
             <div class="rounded-md overflow-auto">
                 <div v-for="(item, index) in postData" :key="index">
@@ -17,7 +18,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                                         </svg>
-                                        <span class="ml-1 text-sm">Archive</span>
+                                        <span class="ml-1 text-sm">Un Archive</span>
                                     </button>
                                 </div>
                             </div>
@@ -25,12 +26,15 @@
                         <div class="flex items-center justify-start">
                             {{ item.description }}
                         </div>
+                        <!-- to do: can make into component -->
                         <div class="flex items-center space-x-3">
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
+                            <div v-for="rate in rating" :key="star">
+                                <span 
+                                :class="{ 
+                                'text-yellow-500 text-3xl': rate <= item.rating, 
+                                'text-gray-400 text-3xl': rate > item.rating }
+                                ">&#9733;</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -42,13 +46,14 @@
 <script setup>
     import { defineProps, ref } from 'vue';
     import http_request from '../../http_request';
-    import { UNARCHIVED } from '../../constant';
+    import { UNARCHIVED, RATING } from '../../constant';
 
     const props = defineProps({
         data: Object,
     });
 
     const postData = ref(props.data.post);
+    const rating = ref(RATING);
 
     const archivedPost = async (id) => {
         const payload = {

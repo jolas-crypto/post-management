@@ -55,4 +55,10 @@
         focus:outline-none 
         focus:border-blue-300
     }
+    .active-nav {
+        @apply
+        border-b-2 
+        border-transparent 
+        border-blue-300
+    }
 }

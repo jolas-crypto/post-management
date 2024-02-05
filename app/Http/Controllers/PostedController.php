@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostedController extends Controller
 {
@@ -58,7 +59,9 @@ class PostedController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Post::where('id', $id)->update($request->all());
+
+        return response()->json(['message' => 'Successful Rating!'], Response::HTTP_OK);
     }
 
     /**

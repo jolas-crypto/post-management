@@ -34,6 +34,7 @@
                     </button>
                 </div>
             </div>
+            <!-- to do: can make into component -->
             <div class="w-3/5 rounded-md overflow-auto">
                 <div v-for="(item, index) in postData" :key="index">
                     <div class="post-container bg-gray-100 rounded-md space-y-3 p-6 mb-4" v-if="!item.archive">
@@ -89,13 +90,15 @@
                             v-model="item.description"
                             ></textarea>
                         </div>
+                        <!-- to do: can make into component -->
                         <div class="flex items-center space-x-3">
-                            <!-- Filled stars -->
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
+                            <div v-for="rate in rating" :key="rate">
+                                <span 
+                                :class="{ 
+                                'text-yellow-500 text-3xl': rate <= item.rating, 
+                                'text-gray-400 text-3xl': rate > item.rating }
+                                ">&#9733;</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -107,7 +110,7 @@
 <script setup>
     import { reactive, defineProps, ref } from 'vue';
     import http_request from '../../http_request';
-    import { ARCHIVED } from '../../constant';
+    import { ARCHIVED, RATING } from '../../constant';
 
     const props = defineProps({
         data: Object,
@@ -120,6 +123,7 @@
     })
 
     const postData = ref(props.data.post);
+    const rating = ref(RATING);
 
     const editDescription = (index) => {
         postData.value[index].editing = 1
