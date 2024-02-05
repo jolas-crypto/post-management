@@ -5,7 +5,9 @@
 @endsection
 
 @section('content')
-    <post-index/>
+    <post-index
+    :data="{{ json_encode($data) }}"
+    />
 @endsection
 
 @push('scripts')
