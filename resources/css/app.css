@@ -31,4 +31,28 @@
         hover:bg-gray-100 
         hover:text-black
     }
+    .button-post-delete {
+        @apply
+        flex 
+        items-center 
+        border 
+        border-red-200
+        rounded-md 
+        px-2 
+        py-1 
+        bg-red-500
+        text-white 
+        hover:bg-gray-100 
+        hover:text-black
+    }
+    .form-input {
+        @apply
+        w-full
+        px-3 
+        py-2 
+        border 
+        rounded-md 
+        focus:outline-none 
+        focus:border-blue-300
+    }
 }

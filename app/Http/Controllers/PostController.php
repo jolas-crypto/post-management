@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
@@ -11,7 +14,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        return view('pages.posts.index');
+        $userId = Auth::user()->id;
+
+        $data = [
+            'post' => Post::with('user')->where('user_id', $userId)->get()
+        ];
+
+        return view('pages.posts.index', compact('data'));
     }
 
     /**
@@ -27,7 +36,17 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userId = Auth::user()->id;
+        
+        $request = $request->all();
+        $request['user_id'] = $userId;
+
+        $post = Post::create($request);
+
+        return response()->json([
+            'data' => $post,
+            'message' => 'Post was successfully added.'
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -49,16 +68,28 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $post->update($request->all());
+
+        return response()->json(['message' => 'Post updated successfully'], Response::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return response()->json(['message' => 'Successfully Deleted!'], Response::HTTP_OK);
+    }
+
+
+    public function archived(Request $request, string $id)
+    {
+        Post::where('id', $id)->update($request->all());
+
+        return response()->json(['message' => 'Successfully Archived!'], Response::HTTP_OK);
     }
 }
