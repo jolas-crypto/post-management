@@ -1,5 +1,6 @@
 <template>
     <main class="rounded-tl-lg bg-white">
+        <!-- to do: can make into component -->
         <div class="container mx-auto px-2 flex">
             <div class="rounded-md overflow-auto">
                 <div v-for="(item, index) in postData" :key="index">
@@ -56,12 +57,15 @@
                             v-model="item.description"
                             ></textarea>
                         </div>
+                        <!-- to do: can make into component -->
                         <div class="flex items-center space-x-3">
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
-                            <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
+                            <div v-for="rate in ratings" :key="rate" @click="rating(rate, item.id, index)">
+                                <span 
+                                :class="{ 
+                                'text-yellow-500 text-3xl hover:cursor-pointer': rate <= item.rating, 
+                                'text-gray-400 text-3xl hover:text-yellow-400 hover:cursor-pointer': rate > item.rating }
+                                ">&#9733;</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,13 +77,14 @@
 <script setup>
     import { defineProps, ref } from 'vue';
     import http_request from '../../http_request';
-    import { ARCHIVED } from '../../constant';
+    import { ARCHIVED, RATING } from '../../constant';
 
     const props = defineProps({
         data: Object,
     });
 
     const postData = ref(props.data.post);
+    const ratings = ref(RATING);
 
     const editDescription = (index) => {
         postData.value[index].editing = 1
@@ -128,6 +133,22 @@
         if (response.success) {
             alert(response.data.message)
             location.reload()
+        } else {
+            data.errors = response.data
+        }
+    }
+
+    const rating = async (rate, postId, index) => {
+
+        const payload = {
+            'rating': rate
+        };
+
+        const response = await http_request.update('PUT', `/posted/${postId}`, payload);
+
+        if (response.success) {
+            alert(response.data.message)
+            postData.value[index].rating = rate;
         } else {
             data.errors = response.data
         }
