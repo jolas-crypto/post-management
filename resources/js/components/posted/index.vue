@@ -1,40 +1,7 @@
 <template>
     <main class="rounded-tl-lg bg-white">
         <div class="container mx-auto px-2 flex">
-            <div class="side-post w-2/5 mr-8 bg-gray-100 rounded-t-md py-6 h-1/3">
-                <div class="max-w-md mx-6">
-                    <div class="mb-4">
-                        <label for="title" class="block mb-1">Title</label>
-                        <input
-                        type="text"
-                        id="title" 
-                        name="title" 
-                        class="form-input" 
-                        placeholder="Enter post title"
-                        v-model="state.post.title">
-                    </div>
-                    <div class="mb-4">
-                        <label for="description" class="block mb-1">Description</label>
-                        <textarea
-                        id="description" 
-                        name="description" 
-                        class="form-input" 
-                        rows="4" 
-                        placeholder="Enter post description"
-                        v-model="state.post.description"
-                        ></textarea>
-                    </div>
-                    <button
-                    class="button-post"
-                    @click="postSubmit">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                        <span class="ml-1 text-sm">Add</span>
-                    </button>
-                </div>
-            </div>
-            <div class="w-3/5 rounded-md overflow-auto">
+            <div class="rounded-md overflow-auto">
                 <div v-for="(item, index) in postData" :key="index">
                     <div class="post-container bg-gray-100 rounded-md space-y-3 p-6 mb-4" v-if="!item.archive">
                         <div class="flex items-center justify-between">
@@ -44,7 +11,7 @@
                                 </svg>
                                 <span class="font-semibold hover:underline">{{ item.user.name }}</span>
                             </div>
-                            <div class="flex">
+                            <div class="flex" v-if="item.user_id === props.data.userId">
                                 <div class="flex item-center space-x-3">
                                     <div v-if="!item.editing">
                                         <button class="button-post" @click="editDescription(index)">
@@ -90,7 +57,6 @@
                             ></textarea>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <!-- Filled stars -->
                             <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
                             <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
                             <span class="text-gray-400 text-3xl hover:text-yellow-400">&#9733;</span>
@@ -105,7 +71,7 @@
 </template>
 
 <script setup>
-    import { reactive, defineProps, ref } from 'vue';
+    import { defineProps, ref } from 'vue';
     import http_request from '../../http_request';
     import { ARCHIVED } from '../../constant';
 
@@ -113,27 +79,10 @@
         data: Object,
     });
 
-    const state = reactive({
-        post: {
-            description: null
-        },
-    })
-
     const postData = ref(props.data.post);
 
     const editDescription = (index) => {
         postData.value[index].editing = 1
-    }
-
-    const postSubmit = async () => {
-        const response = await http_request.save('POST', 'post', state.post);
-
-        if (response.success) {
-            alert(response.data.message)
-            location.reload()
-        } else {
-            data.errors = response.data
-        }
     }
 
     const updateDescription = async (id, index) => {
