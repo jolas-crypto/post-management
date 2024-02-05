@@ -59,11 +59,18 @@
                         </div>
                         <!-- to do: can make into component -->
                         <div class="flex items-center space-x-3">
-                            <div v-for="rate in ratings" :key="rate" @click="rating(rate, item.id, index)">
+                            <div v-for="rate in ratings" :key="rate" @click="rating(rate, item.id, index)" v-if="item.user_id !== props.data.userId">
                                 <span 
                                 :class="{ 
                                 'text-yellow-500 text-3xl hover:cursor-pointer': rate <= item.rating, 
                                 'text-gray-400 text-3xl hover:text-yellow-400 hover:cursor-pointer': rate > item.rating }
+                                ">&#9733;</span>
+                            </div>
+                            <div v-else v-for="rate in ratings">
+                                <span 
+                                :class="{ 
+                                'text-yellow-500 text-3xl': rate <= item.rating, 
+                                'text-gray-400 text-3xl': rate > item.rating }
                                 ">&#9733;</span>
                             </div>
                         </div>
