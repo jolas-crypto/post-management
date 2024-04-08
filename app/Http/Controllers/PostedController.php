@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PostedHelper;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,15 +10,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostedController extends Controller
 {
+    private $postedMethodCustom;
+
+    public function __construct(PostedHelper $postedHelper)
+    {
+        $this->postedMethodCustom = $postedHelper;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = [
-            'post' => Post::with('user')->get(),
-            'userId' => $userId = Auth::user()->id
-        ];
+        $data = $this->postedMethodCustom->dataPosted();
 
         return view('pages.posted.index', compact('data'));
     }

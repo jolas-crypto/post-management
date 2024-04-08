@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PostHelper;
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,16 +11,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
+    private $postMethodHelper;
+
+    public function __construct(PostHelper $postHelper)
+    {
+        $this->postMethodHelper = $postHelper;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $userId = Auth::user()->id;
-
-        $data = [
-            'post' => Post::with('user')->where('user_id', $userId)->get()
-        ];
+        $data = $this->postMethodHelper->dataPost();
 
         return view('pages.posts.index', compact('data'));
     }
@@ -34,14 +39,9 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostRequest $postRequest)
     {
-        $userId = Auth::user()->id;
-        
-        $request = $request->all();
-        $request['user_id'] = $userId;
-
-        $post = Post::create($request);
+        $post = $this->postMethodHelper->customPost($postRequest);
 
         return response()->json([
             'data' => $post,
