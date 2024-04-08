@@ -17,8 +17,6 @@ class Post extends Model
         'updated_by'
     ];
 
-    const ARCHIVED = 1;
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ArchivedHelper;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class ArchivedController extends Controller
@@ -12,13 +12,9 @@ class ArchivedController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(ArchivedHelper $archivedHelper)
     {
-        $userId = Auth::user()->id;
-
-        $data = [
-            'post' => Post::with('user')->where('user_id', $userId)->where('archive', Post::ARCHIVED)->get()
-        ];
+        $data = $archivedHelper->dataArchived();
 
         return view('pages.archive.index', compact('data'));
     }

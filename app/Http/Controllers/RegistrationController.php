@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use App\Helpers\RegistrationHelper;
+use App\Http\Requests\RegistrationRequest;
 
 class RegistrationController extends Controller
 {
+    private $registrationMethodCustom;
+
+    public function __construct(RegistrationHelper $registrationHelper)
+    {
+        $this->registrationMethodCustom = $registrationHelper;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -20,23 +24,10 @@ class RegistrationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RegistrationRequest $registrationRequest)
     {
-        $request->validate([
-            'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed'
-        ]);
+        $this->registrationMethodCustom->storeCustom($registrationRequest);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
-
-        $credentials = $request->only('email', 'password');
-        Auth::attempt($credentials);
-        $request->session()->regenerate();
         return redirect()->route('post.index')
         ->withSuccess('You have successfully registered & logged in!');
     }

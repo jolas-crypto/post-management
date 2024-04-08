@@ -61,4 +61,13 @@
         border-transparent 
         border-blue-300
     }
+    .login-input-class {
+        @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500
+    }
+    .login-button {
+        @apply w-full px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600
+    }
+    .registration-input-class {
+        @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500
+    }
 }
