@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArchivedController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostedController;
@@ -12,6 +13,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/', [LoginController::class, 'authenticate'])->name('login-submit');
     Route::get('/registration', [RegistrationController::class, 'index'])->name('register');
     Route::post('/registration', [RegistrationController::class, 'store'])->name('store');
+
+    Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+    Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
 });
 
 Route::middleware('auth')->group(function () {
